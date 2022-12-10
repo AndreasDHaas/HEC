@@ -4,8 +4,9 @@
 	///////////////////////////////////////
 	
 	* 1) File Paths
-		global hec = 	"E:/Data/PMTCT/HEC/hec"
-		global source = "E:/Data/PMTCT/HEC/source/"
+		global hec = 	"D:/A-Drive-Backup/20200223/Data/PMTCT/HEC/hec"
+		global source = "D:/A-Drive-Backup/20200223/Data/PMTCT/HEC/source/"
+		global hec = "C:/Users/haas/Desktop/HEC"
 					
 	* 2) Macros
 	

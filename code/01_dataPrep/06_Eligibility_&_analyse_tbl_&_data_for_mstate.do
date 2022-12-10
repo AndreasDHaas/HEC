@@ -366,7 +366,7 @@
 					gen dis1 = 1 if lrat_res ==1 & lrat_d >= bf_d & lrat_d !=. 
 					
 				*List 
-					list id bf_d lrat_res dis dis_d dis1 lrat_d bfeed if bf_d !=., sepby(id) header(10)
+					*list id bf_d lrat_res dis dis_d dis1 lrat_d bfeed if bf_d !=., sepby(id) header(10)
 								
 				*Dis_d -> take lrat_d if missing 
 					replace dis_d = lrat_d if dis_d ==. & dis1 ==1
@@ -383,7 +383,7 @@
 			
 			*List 
 				sort id visit visdate 
-				list id visit visdate outcome appdate, sepby(id) 
+				*list id visit visdate outcome appdate, sepby(id) 
 				
 			*Mark all patients who started ART
 				gen ART = 1 if outcome ==3 
@@ -391,7 +391,7 @@
 				
 			*List 
 				sort id visit visdate
-				       list id visit visdate outcome appdate if ART1 ==1, sepby(id) 
+				     *  list id visit visdate outcome appdate if ART1 ==1, sepby(id) 
 					   
 			*Overwrite ART if children continue follow-up therater ART thereafter
 				 list id visit visdate outcome appdate if id =="SA_HEC_12_497_1142", sepby(id)
@@ -411,7 +411,7 @@
 				format ART_d %td
 		
 			*List visits of all children who were discharged
-				  list id visit visdate outcome appdate ART_d ART if ART1 ==1, sepby(id) header(20)
+				  *list id visit visdate outcome appdate ART_d ART if ART1 ==1, sepby(id) header(20)
 							
 			*Dis date < lastvis_d -> use lastvis_d as dis date
 				assert dob < ART_d 
@@ -475,7 +475,7 @@
 					bysort id (visit visdate): egen temp1 = max(temp)
 					
 				*List 
-					 list id dob visit visdate outcome appdate if temp1==1, sepby(id) header(20)
+					* list id dob visit visdate outcome appdate if temp1==1, sepby(id) header(20)
 				
 				*Replace with enrolment date
 					replace visdate = enrol_d if visit ==1 & visdate ==. 
@@ -492,7 +492,7 @@
 						bysort id (visit visdate): egen temp1 = max(temp)
 						
 					*List 
-						list id dob visit visdate outcome appdate temp if temp1==1, sepby(id) header(20)
+						*list id dob visit visdate outcome appdate temp if temp1==1, sepby(id) header(20)
 						
 					*Drop if not in first visit
 						drop if temp ==1 & visit !=1
@@ -505,7 +505,7 @@
 						bysort id (visit visdate): egen temp1 = max(temp)
 						
 					*List 
-						 list id dob visit visdate outcome appdate temp if temp1==1, sepby(id) header(20)
+						* list id dob visit visdate outcome appdate temp if temp1==1, sepby(id) header(20)
 						
 					*Drop if not in first visit
 						drop if temp ==1 & visit !=1
@@ -519,7 +519,7 @@
 						bysort id (visit visdate): egen temp1 = max(temp)
 						
 					*List 
-						 list id dob visit visdate outcome appdate temp if temp1==1, sepby(id) header(20)
+						* list id dob visit visdate outcome appdate temp if temp1==1, sepby(id) header(20)
 						
 					*Drop if not in first visit
 						drop if temp ==1 & visit !=1
@@ -550,7 +550,7 @@
 						bysort id (visit visdate): egen temp1 = max(temp)
 						
 					*List 
-						list id dob visit visdate outcome appdate enrol_d if temp1==1, sepby(id) header(20)
+						*list id dob visit visdate outcome appdate enrol_d if temp1==1, sepby(id) header(20)
 					
 					*Def in first visit -> overwrite outcome
 						replace outcome = 1 if temp ==1 & visit ==1
@@ -662,7 +662,7 @@
 				drop visit visdate height weight muac malnutr bfeed mstatusv tbstatus clinmon hiv cpt outcome appdate _merge
 			
 			*save 
-				save $hec/analyse0.1, replace	
+				save $hec/analyse00, replace	
 					
 			*restore 
 				restore 
@@ -707,7 +707,7 @@
 			*Drop censored visits (after closing date or after 900 days from dob) 
 				
 				*Merge closing date and dob
-					mmerge id using $hec/analyse0.1, unmatched(master) ukeep(close dob)
+					mmerge id using $hec/analyse00, unmatched(master) ukeep(close dob)
 					
 				*Drop visit after closing 
 					*list id vis visdate close dob if visdate > close & visdate !=. , sepby(id) header(20)
@@ -725,7 +725,7 @@
 			*Ensure that each patient has at least one visit 
 				
 				*Use baseline
-					use $hec/analyse0.1, clear
+					use $hec/analyse00, clear
 				
 				*Clean 
 					keep id enrol_d dob close
@@ -856,7 +856,7 @@
 		***Final analysis table 		
 			
 			*Analyse
-				use $hec/analyse0.1, clear 
+				use $hec/analyse00, clear 
 			
 			*Merge LTF
 				mmerge id using $hec/LTF
@@ -991,10 +991,10 @@
 						bysort id: keep if _n ==1
 									
 				*Save 
-					save $hec/analyse0.2, replace
+					save $hec/analyse02, replace
 										
 				*Use 
-					use $hec/analyse0.2, clear
+					use $hec/analyse02, clear
 									
 				***Eligibility 
 					gen elig = 1
@@ -1158,9 +1158,7 @@
 						
 						*Elig 
 							keep if elig ==1
-							
-						*Clean 
-							drop chfname chmname chlname gfname gmname glname newta village newvillage address
+		
 							
 						*Save 
 							save $hec/analyse1, replace	
@@ -1174,8 +1172,8 @@
 							*sex
 								tab sex, mi
 								tab sex, nolab
-								rcdlb sex 1
-								lab list SEX
+								*rcdlb sex 1
+								*lab list SEX
 								
 							*enrol_age_m
 								sum enrol_age_m
@@ -1190,47 +1188,47 @@
 								egen y = group(year), lab
 								tab y, nolab mi
 								drop year 
-								rcdlb y 1
+								*rcdlb y 1
 								
 							*birth weight 
 								tab b_weight, mi
 								rename b_weight bw
 								tab bw, nolab
-								rcdlb bw 2
+								*rcdlb bw 2
 																					
 							*ARVs during pregnancy
 								tab arvpreg, mi
 								tab arvpreg, mi nolab
 								rename arvpreg ap
-								rcdlb ap 1
-								lab list AP
+								*rcdlb ap 1
+								*lab list AP
 								
 							*ARVs during labour 
 								tab arvlab, mi
 								tab arvlab, mi nolab
 								rename arvlab al
-								rcdlb al 1
-								lab list AL
+								*rcdlb al 1
+								*lab list AL
 							
 							*Baby ARVs at birth
 								tab barv_birth, mi
 								tab barv_birth, mi nolab
 								rename barv_b ab
-								rcdlb ab 1
-								lab list AB
+								*rcdlb ab 1
+								*lab list AB
 								
 							*Baby ARVs at continued
 								tab barv_cont, mi
 								tab barv_cont, mi nolab
 								rename barv_c abc
-								rcdlb abc 1
-								lab list ABC
+								*rcdlb abc 1
+								*lab list ABC
 							
 							*Loc
 								tab loc, nolab
 								tab loc
-								rcdlb loc 3
-								lab list LOC
+								*rcdlb loc 3
+								*lab list LOC
 															
 						*Assert
 							assert enrol_s ==1 
