@@ -129,7 +129,8 @@
 					assert cum_N !=. 
 					
 				*N
-					gen N = $N
+					*gen N = $N
+					gen N =11285
 					
 				* Estimate error factor for log risk
 					gen ef=exp(1.96*sqrt(1/cum_N - 1/N))
@@ -194,8 +195,7 @@
 				*Save dataset
 					saveold $hec/HIV_est, replace version(12)
 					
-				*Use
-					use $hec/HIV_est, clear
+				*UseV_est, clear
 					
 				*Weeks
 					gen weeks = month*30/7
@@ -207,7 +207,8 @@
 						format `var' %3.2f
 						}
 										
-					list month week est cif* if inlist(weeks, 8, 52, 129), sepby(est)
+					list month week est cif* if i
+					use $hec/HInlist(weeks, 8, 52, 129), sepby(est)
 			
 				*Save dataset
 					saveold $hec/HIV_est_prc, replace version(12)
